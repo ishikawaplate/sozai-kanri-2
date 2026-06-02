@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>素材在庫管理 v1.2</title>
+<title>素材在庫管理 v1.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -63,39 +63,6 @@ button.secondary:hover{background:var(--bg)}
 .full-btn{width:100%;padding:10px;font-size:13px;font-weight:500;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;transition:all .15s;margin-top:8px}
 .full-btn:hover{background:var(--border)}
 .slabel{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 8px}
-
-/* 一括インポート */
-.drop-zone{border:2px dashed var(--border-strong);border-radius:var(--radius);padding:32px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--blue);background:var(--blue-bg)}
-.drop-zone .dz-icon{font-size:36px;margin-bottom:8px}
-.drop-zone .dz-label{font-size:13px;font-weight:700;color:var(--text-2)}
-.drop-zone .dz-sub{font-size:11px;color:var(--text-3);margin-top:4px}
-.import-preview{margin-top:14px}
-.import-tab-row{display:flex;gap:6px;margin-bottom:10px}
-.import-tab{padding:6px 16px;border-radius:20px;border:1px solid var(--border-strong);background:transparent;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:var(--text-2);transition:all .1s}
-.import-tab.active{background:var(--text);color:white;border-color:var(--text)}
-.preview-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.preview-tbl th{background:var(--bg);padding:5px 6px;border-bottom:2px solid var(--border);text-align:left;font-size:10px;color:var(--text-2);font-weight:700}
-.preview-tbl td{padding:4px 6px;border-bottom:1px solid var(--border);vertical-align:top}
-.preview-tbl tr:hover td{background:var(--bg)}
-.row-ok{background:var(--green-bg)!important}
-.row-warn{background:var(--amber-bg)!important}
-.row-err{background:var(--red-bg)!important}
-.prog-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:8px 0}
-.prog-inner{height:100%;background:var(--blue);border-radius:4px;transition:width .3s}
-.import-result{padding:12px 14px;border-radius:var(--radius-sm);font-size:12px;line-height:1.8;margin-top:10px}
-.import-result.ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
-.import-result.err{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
-/* タブレット向けスクロールバー */
-.list-box::-webkit-scrollbar{width:10px}
-.list-box::-webkit-scrollbar-track{background:var(--bg);border-radius:10px}
-.list-box::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px;border:2px solid var(--bg)}
-.list-box::-webkit-scrollbar-thumb:hover{background:var(--text-3)}
-.home-alerts-wrap{max-height:480px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.home-alerts-wrap::-webkit-scrollbar{width:10px}
-.home-alerts-wrap::-webkit-scrollbar-track{background:var(--bg);border-radius:10px}
-.home-alerts-wrap::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px;border:2px solid var(--bg)}
-
 /* タイプ選択 */
 .type-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .type-btn{padding:14px;border-radius:var(--radius);border:2px solid var(--border);background:var(--surface);cursor:pointer;text-align:center;transition:all .15s;font-family:inherit}
@@ -130,7 +97,7 @@ table.tbl tr:hover td{background:var(--bg)}
 .sbox{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:12px}
 .sbox .sr{display:flex;justify-content:space-between;padding:3px 0;color:var(--text-2)}
 .sbox .sr.tot{font-weight:700;color:var(--text);border-top:1px solid var(--border);margin-top:5px;padding-top:7px}
-.list-box{max-height:420px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;background:var(--surface);-webkit-overflow-scrolling:touch}
+.list-box{max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;background:var(--surface)}
 .ipick{padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid transparent;margin-bottom:2px}
 .ipick:hover{background:var(--bg);border-color:var(--border)}
 .ipick.sel{background:var(--blue-bg);border-color:var(--blue-border)}
@@ -378,17 +345,16 @@ header h1{font-size:15px;font-weight:700;flex:1}
     <button class="menu-btn red" onclick="startOut()"><div class="micon">↑</div><div class="mtitle">出庫</div><div class="mdesc">使用した素材の在庫を減らす</div></button>
   </div>
   <div class="slabel">要対応アイテム</div>
-  <div class="home-alerts-wrap"><div id="home-alerts"><div class="loading"><div class="spin"></div>読込中...</div></div></div>
+  <div id="home-alerts"><div class="loading"><div class="spin"></div>読込中...</div></div>
   <button class="full-btn" onclick="showScreen('sc-list')">📋 在庫一覧を見る</button>
-  <button class="full-btn" style="margin-top:6px;color:var(--purple);border-color:var(--purple-border)" onclick="showScreen('sc-import')">📥 Excelから一括インポート</button>
   <div style="margin-top:16px;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;justify-content:space-between;align-items:center">
     <div>
       <div style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px">システム情報</div>
-      <div style="font-size:13px;font-weight:700;color:var(--text)">素材在庫管理システム <span style="color:var(--blue)">v1.2</span></div>
+      <div style="font-size:13px;font-weight:700;color:var(--text)">素材在庫管理システム <span style="color:var(--blue)">v1.1</span></div>
     </div>
     <div style="text-align:right">
-      <div style="font-size:11px;color:var(--text-3);margin-bottom:3px">総品番数 / 最終取得</div>
-      <div id="sys-info-text" style="font-size:12px;font-weight:700;color:var(--text-2)">読込中...</div>
+      <div style="font-size:11px;color:var(--text-3);margin-bottom:3px">最終更新日</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text-2)">2026年6月1日</div>
     </div>
   </div>
 </div>
@@ -542,8 +508,12 @@ header h1{font-size:15px;font-weight:700;flex:1}
 <button class="back-btn" onclick="goHome()">← 戻る</button>
 <div class="card">
   <div class="top-bar"><h2>入庫 — 既存品番</h2></div>
+  <div class="type-filter-row">
+    <button class="type-filter-btn active-sheet" id="ei-type-sheet" onclick="setEiType('sheet')">🪟 板材</button>
+    <button class="type-filter-btn" id="ei-type-supply" onclick="setEiType('supply')">🧴 消耗品</button>
+  </div>
   <div class="fg"><label>品番・品名で検索</label>
-    <div class="srow"><input type="text" id="ei-search" placeholder="例: CV-B-03 または 塩ビ、シンナー" oninput="buildList('ei')"></div>
+    <div class="srow"><input type="text" id="ei-search" placeholder="品番・品名を入力" oninput="buildList('ei')"></div>
   </div>
   <div class="list-box" id="ei-list"></div>
   <div id="ei-sel-block" style="display:none;margin-top:14px">
@@ -554,6 +524,17 @@ header h1{font-size:15px;font-weight:700;flex:1}
         <input class="qv" type="number" id="ei-qty" value="1" min="1">
         <button class="qb" onclick="adj('ei-qty',1)">＋</button>
         <span id="ei-unit-label" style="font-size:12px;color:var(--text-2)">枚</span>
+      </div>
+    </div>
+    <!-- 入庫時保管場所 -->
+    <div class="in-loc-section">
+      <div class="il-title">📍 保管場所（入庫先）<span style="font-size:10px;font-weight:400;color:var(--text-3)"> 複数可・任意</span></div>
+      <div id="ei-loc-entries"></div>
+      <div class="in-loc-add">
+        <input type="text" id="ei-loc-input" placeholder="④-2" readonly
+          style="flex:1;min-width:70px;padding:5px 8px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font-size:12px;font-family:inherit">
+        <button class="secondary" style="padding:5px 9px;font-size:11px" onclick="openLocPicker('ei-in')">🗺 選択</button>
+        <button class="secondary" style="padding:5px 9px;font-size:11px" onclick="addEiLoc()">＋ 追加</button>
       </div>
     </div>
     <div class="fg"><label>備考</label><input type="text" id="ei-note" placeholder="納品書番号など"></div>
@@ -579,8 +560,12 @@ header h1{font-size:15px;font-weight:700;flex:1}
 <div class="card">
   <div class="top-bar"><h2>品番が分からない場合</h2></div>
   <p style="font-size:12px;color:var(--text-2);margin-bottom:12px">品名・サイズ・カラーで検索して品番を特定します。</p>
+  <div class="type-filter-row">
+    <button class="type-filter-btn active-sheet" id="sr-type-sheet" onclick="setSrType('sheet')">🪟 板材</button>
+    <button class="type-filter-btn" id="sr-type-supply" onclick="setSrType('supply')">🧴 消耗品</button>
+  </div>
   <div class="fg"><label>フリーワード検索</label>
-    <input type="text" id="sr-search" placeholder="例: 塩ビ 透明 1×2、シンナー" oninput="buildList('sr')">
+    <input type="text" id="sr-search" placeholder="品名・サイズ・カラーで検索" oninput="buildList('sr')">
   </div>
   <div class="list-box" id="sr-list"></div>
   <div id="sr-sel-block" style="display:none;margin-top:14px">
@@ -598,8 +583,12 @@ header h1{font-size:15px;font-weight:700;flex:1}
 <button class="back-btn" onclick="goHome()">← 戻る</button>
 <div class="card">
   <div class="top-bar"><h2>出庫</h2></div>
+  <div class="type-filter-row">
+    <button class="type-filter-btn active-sheet" id="out-type-sheet" onclick="setOutType('sheet')">🪟 板材</button>
+    <button class="type-filter-btn" id="out-type-supply" onclick="setOutType('supply')">🧴 消耗品</button>
+  </div>
   <div class="fg"><label>品番・品名で検索</label>
-    <div class="srow"><input type="text" id="out-search" placeholder="例: CV-A-03 または PET、シンナー" oninput="buildList('out')"></div>
+    <div class="srow"><input type="text" id="out-search" placeholder="品番・品名を入力" oninput="buildList('out')"></div>
   </div>
   <div class="list-box" id="out-list"></div>
   <div id="out-sel-block" style="display:none;margin-top:14px">
@@ -654,52 +643,13 @@ header h1{font-size:15px;font-weight:700;flex:1}
 </div>
 </div>
 
-
-<!-- ===== 一括インポート ===== -->
-<div class="screen" id="sc-import">
-<button class="back-btn" onclick="goHome()">← 戻る</button>
-<div class="card">
-  <div class="top-bar"><h2>📥 Excelから一括インポート</h2></div>
-  <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.8">
-    「素材在庫_一括入力シート.xlsx」をそのままアップロードするだけで登録できます。<br>
-    <span style="color:var(--amber);font-weight:700">⚠ すでに同じ品番が存在する場合はスキップされます（上書きしません）。</span>
-  </p>
-  <div class="drop-zone" id="drop-zone"
-    ondragover="event.preventDefault();this.classList.add('drag')"
-    ondragleave="this.classList.remove('drag')"
-    ondrop="handleDrop(event)"
-    onclick="document.getElementById('xlsx-file-input').click()">
-    <div class="dz-icon">📂</div>
-    <div class="dz-label">ここをクリック or ファイルをドロップ</div>
-    <div class="dz-sub">素材在庫_一括入力シート.xlsx</div>
-  </div>
-  <input type="file" id="xlsx-file-input" accept=".xlsx" style="display:none" onchange="handleFileSelect(this.files[0])">
-  <div class="import-preview" id="import-preview" style="display:none">
-    <div class="import-tab-row" id="import-tabs"></div>
-    <div style="font-size:11px;color:var(--text-2);margin-bottom:6px" id="import-summary"></div>
-    <div style="overflow-x:auto;max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm)">
-      <table class="preview-tbl" id="preview-table"><thead></thead><tbody></tbody></table>
-    </div>
-    <div style="font-size:11px;color:var(--text-3);margin-top:6px">🟢 登録OK　🟡 部署コードなし（登録可）　🔴 必須項目不足でスキップ</div>
-    <div id="import-prog" style="display:none">
-      <div class="prog-bar"><div class="prog-inner" id="prog-inner" style="width:0%"></div></div>
-      <div style="font-size:11px;color:var(--text-2);text-align:center" id="prog-label">処理中...</div>
-    </div>
-    <div id="import-result"></div>
-    <div class="btn-row" style="margin-top:14px">
-      <button class="secondary" onclick="resetImport()">← ファイルを選び直す</button>
-      <button class="primary purple-btn" id="import-exec-btn" onclick="execImport()">✓ インポート実行</button>
-    </div>
-  </div>
-</div>
-</div>
-
 </div><!-- /app -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzqVdQBYhXHk0baTnS3vfKpW29R-jflQRIRoNtD51n-eoLQ7GyFO4s1tEWNCQ9SBe3o/exec';
 let items=[],selEI=null,selSR=null,selOut=null,listFilter='all';
+let eiType='sheet',srType='sheet',outType='sheet';
+let eiLocEntries=[];
 let listPage=0; const PAGE_SIZE=20;
 let locPickerTarget=null,locPickerSelected=null,currentFactory='4';
 let newLocEntries=[],editLocEntries=[],supplyLocEntries=[];
@@ -845,7 +795,7 @@ function pickZone(id){
 }
 function confirmLocPicker(){
   if(!locPickerSelected)return;
-  const inputMap={new:'n-loc-input',edit:'edit-loc-input',supply:'s-loc-input'};
+  const inputMap={new:'n-loc-input',edit:'edit-loc-input',supply:'s-loc-input','ei-in':'ei-loc-input'};
   const el=document.getElementById(inputMap[locPickerTarget]);
   if(el) el.value=locPickerSelected;
   closeModal('loc-picker-modal');
@@ -993,7 +943,7 @@ function renderHome(){
     <div class="sc purple"><div class="sn">${ord.length}</div><div class="sl">手配中</div></div>
     <div class="sc amber"><div class="sn">${items.length}</div><div class="sl">総品番数</div></div>
     <div class="sc green"><div class="sn">${ok.length}</div><div class="sl">充足</div></div>`;
-  const alerts=[...need,...ord].slice(0,10);
+  const alerts=[...need,...ord].slice(0,8);
   document.getElementById('home-alerts').innerHTML=alerts.length
     ?alerts.map(it=>{
       const s=getStatus(it);const cls=s==='need'?'danger':'purp';
@@ -1007,9 +957,6 @@ function renderHome(){
       </div>${btns}</div>`;
     }).join('')
     :'<div style="font-size:12px;color:var(--text-2);padding:8px 0">✓ 要対応アイテムはありません</div>';
-  const now=new Date();
-  const sysEl=document.getElementById('sys-info-text');
-  if(sysEl) sysEl.textContent=items.length+'品番 / '+now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日 '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')+'取得';
 }
 
 /* ====== サマリーHTML ====== */
@@ -1105,7 +1052,46 @@ async function doRegisterNew(d){
     if(res.ok){
       localStorage.removeItem(CACHE_KEY);
       newLocEntries=[];supplyLocEntries=[];pendingNewData=null;
-      await loadData(false);toast('✓ 登録しました：'+d.code+' '+(d.supply_name||d.name));goHome();
+      await 
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
+loadData(false);toast('✓ 登録しました：'+d.code+' '+(d.supply_name||d.name));goHome();
     } else{errEl.textContent='失敗: '+(res.error||'不明');errEl.style.display='';}
   }catch(e){errEl.textContent='通信エラー: '+e.message;errEl.style.display='';}
   btn.disabled=false;btn.textContent='✓ 登録する';
@@ -1207,7 +1193,46 @@ async function submitEdit(){
   }
   try{
     const res=await gasCall({action:'update',data:payload});
-    if(res.ok){localStorage.removeItem(CACHE_KEY);await loadData(false);closeModal('edit-modal');toast('✓ 保存しました');}
+    if(res.ok){localStorage.removeItem(CACHE_KEY);await 
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
+loadData(false);closeModal('edit-modal');toast('✓ 保存しました');}
     else{errEl.textContent='失敗: '+(res.error||'不明');errEl.style.display='';}
   }catch(e){errEl.textContent='通信エラー: '+e.message;errEl.style.display='';}
   btn.disabled=false;btn.textContent='✓ 保存する';
@@ -1232,13 +1257,91 @@ async function confirmOrdered(){
   closeModal('order-modal');
   try{
     const res=await gasCall({action:'update',data:{id,ordered:true,order_info:JSON.stringify(info)}});
-    if(res.ok){localStorage.removeItem(CACHE_KEY);await loadData(false);toast('✓ 手配中に設定しました');}
+    if(res.ok){localStorage.removeItem(CACHE_KEY);await 
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
+loadData(false);toast('✓ 手配中に設定しました');}
   }catch(e){alert('エラー: '+e.message);}
 }
 async function confirmUnorder(id){
   try{
     const res=await gasCall({action:'update',data:{id,ordered:false,order_info:''}});
-    if(res.ok){localStorage.removeItem(CACHE_KEY);await loadData(false);toast('✓ 手配中を解除しました');}
+    if(res.ok){localStorage.removeItem(CACHE_KEY);await 
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
+loadData(false);toast('✓ 手配中を解除しました');}
   }catch(e){alert('エラー: '+e.message);}
 }
 function quickIn(id){const it=items.find(x=>String(x.id)===String(id));if(!it)return;selEI=it.id;startInExist();selectItem('ei',it.id);}
@@ -1247,9 +1350,14 @@ function quickIn(id){const it=items.find(x=>String(x.id)===String(id));if(!it)re
 function buildList(mode){
   const idMap={ei:'ei-search',sr:'sr-search',out:'out-search'};
   const kw=(document.getElementById(idMap[mode]).value||'').toLowerCase();
-  const filtered=items.filter(it=>(it.code+(it.supply_name||it.name)+it.size+it.color+it.loc).toLowerCase().includes(kw));
+  const typeFilter=mode==='ei'?eiType:mode==='sr'?srType:outType;
+  const filtered=items.filter(it=>{
+    const matchType=typeFilter==='sheet'?(it.item_type!=='supply'):(it.item_type==='supply');
+    const matchKw=(it.code+(it.supply_name||it.name)+it.size+it.color+it.loc).toLowerCase().includes(kw);
+    return matchType&&matchKw;
+  });
   const selId=mode==='ei'?selEI:mode==='sr'?selSR:selOut;
-  document.getElementById(mode+'-list').innerHTML=filtered.slice(0,200).map(it=>`
+  document.getElementById(mode+'-list').innerHTML=filtered.slice(0,50).map(it=>`
     <div class="ipick ${String(selId)===String(it.id)?'sel':''}" onclick="selectItem('${mode}','${it.id}')">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div><span class="ic">${it.code}</span> <span class="in">${it.supply_name||it.name} ${it.size||''} ${it.color||''}</span> ${typeBadge(it)}</div>
@@ -1262,7 +1370,7 @@ function selectItem(mode,id){
   const it=items.find(x=>String(x.id)===String(id));if(!it)return;
   const unit=getUnit(it);
   if(mode==='ei'){
-    selEI=it.id;buildList('ei');
+    selEI=it.id;eiLocEntries=[];renderEiLocEntries();buildList('ei');
     document.getElementById('ei-sel-block').style.display='';
     document.getElementById('ei-summary').innerHTML=summaryHTML(it);
     document.getElementById('ei-unit-label').textContent=unit;
@@ -1299,11 +1407,58 @@ async function submitInExist(){
   if(qty<1){errEl.textContent='1以上入力してください';errEl.style.display='';return;}
   const btn=document.getElementById('ei-submit-btn');btn.disabled=true;btn.textContent='処理中...';
   const clearOrder=getStatus(it)==='ordering'&&document.getElementById('ei-clear-order').checked;
-  const payload={id:it.id,stock:Number(it.stock)+qty};
+  // 保管場所のマージ（既存loc＋新規eiLocEntriesを合算）
+  const existingLocs=parseLocs(it.loc||'');
+  eiLocEntries.forEach(ne=>{
+    const found=existingLocs.find(e=>e.zone===ne.zone);
+    if(found){found.qty=(found.qty||0)+(ne.qty||0);}
+    else{existingLocs.push({...ne});}
+  });
+  const newLoc=locsToString(existingLocs);
+  const payload={id:it.id,stock:Number(it.stock)+qty,loc:newLoc};
   if(clearOrder)payload.ordered=false;
   try{
     const res=await gasCall({action:'update',data:payload});
-    if(res.ok){localStorage.removeItem(CACHE_KEY);await loadData(false);toast('✓ 入庫：'+it.code+' +'+qty+getUnit(it));goHome();}
+    if(res.ok){localStorage.removeItem(CACHE_KEY);await 
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
+loadData(false);toast('✓ 入庫：'+it.code+' +'+qty+getUnit(it));goHome();}
     else{errEl.textContent='失敗: '+(res.error||'不明');errEl.style.display='';}
   }catch(e){errEl.textContent='通信エラー: '+e.message;errEl.style.display='';}
   btn.disabled=false;btn.textContent='✓ 入庫する';
@@ -1318,15 +1473,54 @@ async function submitOut(){
   const btn=document.getElementById('out-submit-btn');btn.disabled=true;btn.textContent='処理中...';
   try{
     const res=await gasCall({action:'update',data:{id:it.id,stock:Math.max(0,Number(it.stock)-qty)}});
-    if(res.ok){localStorage.removeItem(CACHE_KEY);await loadData(false);toast('✓ 出庫：'+it.code+' −'+qty+getUnit(it));goHome();}
+    if(res.ok){localStorage.removeItem(CACHE_KEY);await 
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
+loadData(false);toast('✓ 出庫：'+it.code+' −'+qty+getUnit(it));goHome();}
     else{errEl.textContent='失敗: '+(res.error||'不明');errEl.style.display='';}
   }catch(e){errEl.textContent='通信エラー: '+e.message;errEl.style.display='';}
   btn.disabled=false;btn.textContent='✓ 出庫する';
 }
 
-function startInExist(){selEI=null;showScreen('sc-in-exist');document.getElementById('ei-sel-block').style.display='none';document.getElementById('ei-search').value='';buildList('ei');}
-function startSearch(){selSR=null;showScreen('sc-search');document.getElementById('sr-sel-block').style.display='none';document.getElementById('sr-search').value='';buildList('sr');}
-function startOut(){selOut=null;showScreen('sc-out');document.getElementById('out-sel-block').style.display='none';document.getElementById('out-search').value='';buildList('out');}
+function startInExist(){selEI=null;eiLocEntries=[];eiType='sheet';showScreen('sc-in-exist');document.getElementById('ei-sel-block').style.display='none';document.getElementById('ei-search').value='';updateTypeFilterUI('ei','sheet');buildList('ei');}
+function startSearch(){selSR=null;srType='sheet';showScreen('sc-search');document.getElementById('sr-sel-block').style.display='none';document.getElementById('sr-search').value='';updateTypeFilterUI('sr','sheet');buildList('sr');}
+function startOut(){selOut=null;outType='sheet';showScreen('sc-out');document.getElementById('out-sel-block').style.display='none';document.getElementById('out-search').value='';updateTypeFilterUI('out','sheet');buildList('out');}
 function gotoInFromSearch(){if(!selSR)return;selEI=selSR;startInExist();const it=items.find(x=>String(x.id)===String(selEI));if(it)selectItem('ei',it.id);}
 function gotoOutFromSearch(){if(!selSR)return;selOut=selSR;startOut();const it=items.find(x=>String(x.id)===String(selOut));if(it)selectItem('out',it.id);}
 
@@ -1411,163 +1605,46 @@ function renderList(){
 function goPage(p){listPage=p;renderList();}
 function setFilter(f){listFilter=f;listPage=0;renderList();}
 
+
+/* ====== 板材/消耗品 分岐 ====== */
+function updateTypeFilterUI(mode, type){
+  const sheetBtn=document.getElementById(mode+'-type-sheet');
+  const supplyBtn=document.getElementById(mode+'-type-supply');
+  if(!sheetBtn||!supplyBtn)return;
+  sheetBtn.className='type-filter-btn'+(type==='sheet'?' active-sheet':'');
+  supplyBtn.className='type-filter-btn'+(type==='supply'?' active-supply':'');
+}
+function setEiType(t){eiType=t;updateTypeFilterUI('ei',t);document.getElementById('ei-sel-block').style.display='none';selEI=null;buildList('ei');}
+function setSrType(t){srType=t;updateTypeFilterUI('sr',t);document.getElementById('sr-sel-block').style.display='none';selSR=null;buildList('sr');}
+function setOutType(t){outType=t;updateTypeFilterUI('out',t);document.getElementById('out-sel-block').style.display='none';selOut=null;buildList('out');}
+
+/* ====== 入庫時保管場所 ====== */
+function renderEiLocEntries(){
+  const el=document.getElementById('ei-loc-entries');
+  if(!el)return;
+  el.innerHTML=eiLocEntries.map((e,i)=>`
+    <div class="in-loc-entry">
+      <span class="ile-zone" onclick="showLocView('${e.zone}')">📍${e.zone}</span>
+      <input class="ile-qty" type="number" value="${e.qty||''}" min="0" placeholder="数量"
+        oninput="eiLocEntries[${i}].qty=parseInt(this.value)||null">
+      <span style="font-size:11px;color:var(--text-2)" id="ei-loc-unit-${i}">枚</span>
+      <button class="ile-del" onclick="removeEiLoc(${i})">×</button>
+    </div>`).join('');
+  // 単位を現在選択中アイテムのunitに合わせる
+  const it=items.find(x=>String(x.id)===String(selEI));
+  if(it){const u=getUnit(it);eiLocEntries.forEach((_,i)=>{const el2=document.getElementById('ei-loc-unit-'+i);if(el2)el2.textContent=u;});}
+}
+function addEiLoc(){
+  const zone=document.getElementById('ei-loc-input').value.trim();
+  if(!zone){alert('地図から場所を選択してください');return;}
+  if(eiLocEntries.find(e=>e.zone===zone)){alert('すでに追加済みです');return;}
+  eiLocEntries.push({zone,qty:null,unit:''});
+  document.getElementById('ei-loc-input').value='';
+  renderEiLocEntries();
+}
+function removeEiLoc(idx){eiLocEntries.splice(idx,1);renderEiLocEntries();}
+
 loadData(false);
-
-/* ====== 一括インポート ====== */
-let importData={sheet:[],supply:[]};
-let importActiveTab='sheet';
-
-function handleDrop(e){
-  e.preventDefault();
-  document.getElementById('drop-zone').classList.remove('drag');
-  const file=e.dataTransfer.files[0];
-  if(file) handleFileSelect(file);
-}
-
-function handleFileSelect(file){
-  if(!file||!file.name.endsWith('.xlsx')){alert('xlsxファイルを選択してください');return;}
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const wb=XLSX.read(e.target.result,{type:'array'});
-      importData={sheet:[],supply:[]};
-      const ws1name=wb.SheetNames.find(n=>n==='板材');
-      if(ws1name){
-        const rows=XLSX.utils.sheet_to_json(wb.Sheets[ws1name],{header:1,defval:''});
-        for(let i=4;i<rows.length;i++){
-          const r=rows[i];
-          const dept=String(r[0]||'').trim();
-          const mat=String(r[1]||'').trim();
-          const thk=String(r[2]||'').trim();
-          const name=String(r[4]||'').trim();
-          const size=String(r[5]||'').trim();
-          const color=String(r[6]||'').trim();
-          const loc=String(r[7]||'').trim();
-          const minS=parseInt(r[8])||1;
-          const stk=parseInt(r[9])||0;
-          const note=String(r[10]||'').trim();
-          if(!name) continue;
-          const code=(dept&&mat&&thk)?dept+'-'+mat+'-'+thk:'';
-          const status=!name?'err':(!dept||!mat||!thk)?'warn':'ok';
-          importData.sheet.push({dept,mat,thk,code,name,size,color,loc,min_stock:minS,stock:stk,note,item_type:'sheet',unit:'枚',status});
-        }
-      }
-      const ws2name=wb.SheetNames.find(n=>n==='消耗品');
-      if(ws2name){
-        const rows=XLSX.utils.sheet_to_json(wb.Sheets[ws2name],{header:1,defval:''});
-        for(let i=4;i<rows.length;i++){
-          const r=rows[i];
-          const dept=String(r[0]||'').trim();
-          const code_in=String(r[1]||'').trim();
-          const name=String(r[3]||'').trim();
-          const cat=String(r[4]||'').trim();
-          const unit=String(r[5]||'').trim()||'個';
-          const maker=String(r[6]||'').trim();
-          const loc=String(r[7]||'').trim();
-          const minS=parseInt(r[8])||1;
-          const stk=parseInt(r[9])||0;
-          const note=String(r[10]||'').trim();
-          if(!name) continue;
-          const code=code_in||(dept?dept+'-SU':'SU');
-          const status=!name?'err':!unit?'err':'ok';
-          importData.supply.push({dept,code,supply_name:name,name,supply_cat:cat,unit,
-            note:maker?(maker+(note?' / '+note:'')):note,loc,min_stock:minS,stock:stk,item_type:'supply',color:'',size:'',status});
-        }
-      }
-      renderImportPreview();
-    }catch(ex){alert('読み込みに失敗しました: '+ex.message);}
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function renderImportPreview(){
-  const sc=importData.sheet.length,su=importData.supply.length;
-  if(sc===0&&su===0){alert('読み込めるデータがありませんでした。シート名が「板材」「消耗品」になっているか確認してください。');return;}
-  document.getElementById('import-preview').style.display='';
-  document.getElementById('drop-zone').style.display='none';
-  const tabs=[];
-  if(sc>0) tabs.push({key:'sheet',label:'🪟 板材 '+sc+'件'});
-  if(su>0) tabs.push({key:'supply',label:'🧴 消耗品 '+su+'件'});
-  importActiveTab=tabs[0]?.key||'sheet';
-  document.getElementById('import-tabs').innerHTML=tabs.map(t=>
-    `<button class="import-tab ${importActiveTab===t.key?'active':''}" onclick="switchImportTab('${t.key}')">${t.label}</button>`
-  ).join('');
-  renderImportTable();
-}
-
-function switchImportTab(key){
-  importActiveTab=key;
-  document.querySelectorAll('.import-tab').forEach(b=>b.classList.toggle('active',b.textContent.includes(key==='sheet'?'板材':'消耗品')));
-  renderImportTable();
-}
-
-function renderImportTable(){
-  const data=importActiveTab==='sheet'?importData.sheet:importData.supply;
-  const okCnt=data.filter(r=>r.status==='ok').length;
-  const warnCnt=data.filter(r=>r.status==='warn').length;
-  const errCnt=data.filter(r=>r.status==='err').length;
-  document.getElementById('import-summary').textContent=`登録予定: ${okCnt+warnCnt}件　スキップ(必須不足): ${errCnt}件`;
-  let thead='',tbody='';
-  if(importActiveTab==='sheet'){
-    thead='<tr><th>状態</th><th>コード</th><th>商品名</th><th>サイズ</th><th>カラー</th><th>在庫</th><th>適正</th><th>保管場所</th><th>備考</th></tr>';
-    tbody=data.map(r=>{
-      const cls=r.status==='ok'?'row-ok':r.status==='warn'?'row-warn':'row-err';
-      const icon=r.status==='ok'?'🟢':r.status==='warn'?'🟡':'🔴';
-      const cd=r.code||`(${r.mat||'?'}-${r.thk||'?'} 部署未設定)`;
-      return`<tr class="${cls}"><td>${icon}</td><td style="font-size:10px;font-weight:700;color:var(--blue)">${cd}</td><td>${r.name}</td><td>${r.size}</td><td>${r.color}</td><td style="text-align:center">${r.stock}</td><td style="text-align:center">${r.min_stock}</td><td style="font-size:10px">${r.loc}</td><td style="font-size:10px">${r.note}</td></tr>`;
-    }).join('');
-  }else{
-    thead='<tr><th>状態</th><th>コード</th><th>品名</th><th>単位</th><th>在庫</th><th>適正</th><th>保管場所</th><th>備考</th></tr>';
-    tbody=data.map(r=>{
-      const cls=r.status==='ok'?'row-ok':r.status==='warn'?'row-warn':'row-err';
-      const icon=r.status==='ok'?'🟢':r.status==='warn'?'🟡':'🔴';
-      return`<tr class="${cls}"><td>${icon}</td><td style="font-size:10px;font-weight:700;color:var(--teal)">${r.code}</td><td>${r.supply_name}</td><td>${r.unit}</td><td style="text-align:center">${r.stock}</td><td style="text-align:center">${r.min_stock}</td><td style="font-size:10px">${r.loc}</td><td style="font-size:10px">${r.note}</td></tr>`;
-    }).join('');
-  }
-  document.getElementById('preview-table').querySelector('thead').innerHTML=thead;
-  document.getElementById('preview-table').querySelector('tbody').innerHTML=tbody;
-}
-
-function resetImport(){
-  importData={sheet:[],supply:[]};
-  document.getElementById('import-preview').style.display='none';
-  document.getElementById('drop-zone').style.display='';
-  document.getElementById('import-result').innerHTML='';
-  document.getElementById('xlsx-file-input').value='';
-  document.getElementById('import-exec-btn').disabled=false;
-  document.getElementById('import-exec-btn').textContent='✓ インポート実行';
-}
-
-async function execImport(){
-  const toImport=[...importData.sheet.filter(r=>r.status!=='err'),...importData.supply.filter(r=>r.status!=='err')];
-  if(toImport.length===0){alert('インポートできるデータがありません');return;}
-  if(!confirm(toImport.length+'件を登録します。よろしいですか？'))return;
-  const btn=document.getElementById('import-exec-btn');
-  btn.disabled=true;btn.textContent='処理中...';
-  document.getElementById('import-prog').style.display='';
-  document.getElementById('import-result').innerHTML='';
-  let ok=0,skip=0,err=0;
-  for(let i=0;i<toImport.length;i++){
-    const d=toImport[i];
-    document.getElementById('prog-inner').style.width=Math.round((i+1)/toImport.length*100)+'%';
-    document.getElementById('prog-label').textContent=`${i+1} / ${toImport.length} 件処理中...`;
-    try{
-      const res=await gasCall({action:'add',data:d});
-      if(res.ok) ok++;
-      else{skip++;console.warn('skip:',d.name,res.error);}
-    }catch(e){err++;console.error('err:',d.name,e);}
-    await new Promise(r=>setTimeout(r,300));
-  }
-  document.getElementById('import-prog').style.display='none';
-  localStorage.removeItem(CACHE_KEY);
-  await loadData(false);
-  const cls=err>0?'err':'ok';
-  document.getElementById('import-result').innerHTML=
-    `<div class="import-result ${cls}">✓ 登録完了: <strong>${ok}件</strong>　スキップ: ${skip}件　エラー: ${err}件${err>0?'<br>一部エラーが発生しました。':''}
-    </div>`;
-  btn.textContent='✓ 完了';
-}
-
 </script>
 </body>
 </html>
