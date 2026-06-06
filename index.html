@@ -1197,7 +1197,9 @@ async function submitNew(){
     document.getElementById('dup-list').innerHTML=dups.map(it=>`
       <div style="background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px">
         <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px">📦 ${it.code} — ${it.supply_name||it.name} ${typeBadge(it)}</div>
-        <div style="font-size:11px;color:var(--text-2);margin-bottom:8px">在庫: ${it.stock}${getUnit(it)} / 適正: ${it.min_stock}${getUnit(it)}${it.loc?' / 📍'+it.loc:''}</div>
+        <div style="font-size:11px;color:var(--text-2);margin-bottom:6px">
+          ${it.item_type!=='supply'?`サイズ: ${it.size||'—'} ／ カラー: ${it.color||'—'}<br>`:''}在庫: ${it.stock}${getUnit(it)} / 適正: ${it.min_stock}${getUnit(it)}${it.loc?' / 📍'+it.loc:''}
+        </div>
         <button class="primary green-btn" style="font-size:12px;padding:6px 14px;width:100%" onclick="gotoExistFromDup('${it.id}')">↓ この品番に入庫する</button>
       </div>`).join('');
     document.getElementById('dup-modal').classList.add('open');
@@ -1319,22 +1321,23 @@ async function submitEdit(){
 }
 
 /* ====== 削除 ====== */
-async function deleteItem(){
-  const id=document.getElementById('edit-id').value;
+async function deleteItem(idArg){
+  // 編集モーダル経由(引数なし)とリスト直接(id引数あり)の両対応
+  const id=idArg||document.getElementById('edit-id').value;
   const it=items.find(x=>String(x.id)===String(id));
   if(!it)return;
   const name=it.item_type==='supply'?(it.supply_name||it.name):it.name;
   if(!confirm(`「${it.code} ${name}」を削除しますか？\n\nこの操作は取り消せません。`))return;
-  const errEl=document.getElementById('edit-err');errEl.style.display='none';
+  // 編集モーダルが開いていれば閉じる
+  closeModal('edit-modal');
   try{
     const res=await gasCall({action:'delete',data:{id}});
     if(res.ok){
       localStorage.removeItem(CACHE_KEY);
       await loadData(false);
-      closeModal('edit-modal');
       toast('🗑 削除しました：'+it.code);
-    } else{errEl.textContent='削除失敗: '+(res.error||'不明');errEl.style.display='';}
-  }catch(e){errEl.textContent='通信エラー: '+e.message;errEl.style.display='';}
+    } else{alert('削除失敗: '+(res.error||'不明'));}
+  }catch(e){alert('通信エラー: '+e.message);}
 }
 
 /* ====== 手配中 ====== */
@@ -1617,7 +1620,7 @@ function renderList(){
         <div style="display:flex;gap:3px;justify-content:center;flex-wrap:wrap">
           <button class="act-btn edit" onclick="openEditModal('${it.id}')">✏️</button>
           ${orderBtn}
-          <button class="act-btn del" onclick="openEditModal('${it.id}')">🗑</button>
+          <button class="act-btn del" onclick="deleteItem('${it.id}')">🗑</button>
         </div>
       </td>
     </tr>`;
