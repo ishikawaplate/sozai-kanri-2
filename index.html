@@ -511,14 +511,30 @@ header h1{font-size:15px;font-weight:700;flex:1}
   <div class="list-box" id="ei-list"></div>
   <div id="ei-sel-block" style="display:none;margin-top:14px">
     <div class="sbox" id="ei-summary"></div>
-    <div class="fg"><label>入庫数 *</label>
-      <div class="qty-row">
-        <button class="qb" onclick="adj('ei-qty',-1)">−</button>
-        <input class="qv" type="number" id="ei-qty" value="1" min="1">
-        <button class="qb" onclick="adj('ei-qty',1)">＋</button>
-        <span id="ei-unit-label" style="font-size:12px;color:var(--text-2)">枚</span>
+
+    <!-- 保管場所ごと入庫 -->
+    <div id="ei-loc-section" style="display:none">
+      <div class="slabel">📍 保管場所ごとの入庫数を入力</div>
+      <p style="font-size:11px;color:var(--text-2);margin-bottom:8px">各保管場所の入庫数を入力してください（0のままでもOK）</p>
+      <div class="loc-out-list" id="ei-loc-list"></div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;display:flex;justify-content:space-between;margin-bottom:10px">
+        <span style="color:var(--text-2)">合計入庫数</span>
+        <span id="ei-loc-total" style="font-weight:700;color:var(--text)">0</span>
       </div>
     </div>
+
+    <!-- 保管場所なし・通常入庫 -->
+    <div id="ei-qty-section">
+      <div class="fg"><label>入庫数 *</label>
+        <div class="qty-row">
+          <button class="qb" onclick="adj('ei-qty',-1)">−</button>
+          <input class="qv" type="number" id="ei-qty" value="1" min="1">
+          <button class="qb" onclick="adj('ei-qty',1)">＋</button>
+          <span id="ei-unit-label" style="font-size:12px;color:var(--text-2)">枚</span>
+        </div>
+      </div>
+    </div>
+
     <div class="fg"><label>備考</label><input type="text" id="ei-note" placeholder="納品書番号など"></div>
     <div id="ei-order-row" style="display:none">
       <div class="warn-box">🚚 この品番は「手配中」です。入荷済みにしますか？</div>
@@ -1404,6 +1420,7 @@ function selectItem(mode,id){
     document.getElementById('ei-unit-label').textContent=unit;
     document.getElementById('ei-order-row').style.display=getStatus(it)==='ordering'?'':'none';
     document.getElementById('ei-err').style.display='none';
+    buildInLocSection(it);
   }else if(mode==='sr'){
     selSR=it.id;buildList('sr');
     document.getElementById('sr-sel-block').style.display='';
@@ -1421,6 +1438,49 @@ function selectItem(mode,id){
 }
 
 /* ====== 出庫保管場所連動 ====== */
+/* ====== 入庫保管場所連動 ====== */
+function buildInLocSection(it){
+  const locs=parseLocs(it.loc||'');
+  const locSec=document.getElementById('ei-loc-section');
+  const qtySec=document.getElementById('ei-qty-section');
+  if(locs.length>0){
+    locSec.style.display='';
+    qtySec.style.display='none';
+    document.getElementById('ei-loc-list').innerHTML=locs.map((l,i)=>`
+      <div class="loc-out-item">
+        <div>
+          <div class="loc-out-name" onclick="showLocView('${l.zone}')">📍 ${l.zone}</div>
+          <div class="loc-out-stock">現在数量: ${l.qty!=null?l.qty+getUnit(it):'未設定'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button class="qb" style="width:26px;height:26px;font-size:14px" onclick="adjLocIn(${i},-1)">−</button>
+          <input class="qv loc-out-qty" style="width:55px;font-size:13px" type="number" id="ei-loc-qty-${i}" value="0" min="0" oninput="calcLocInTotal()">
+          <button class="qb" style="width:26px;height:26px;font-size:14px" onclick="adjLocIn(${i},1)">＋</button>
+        </div>
+      </div>`).join('');
+    calcLocInTotal();
+  } else {
+    locSec.style.display='none';
+    qtySec.style.display='';
+    document.getElementById('ei-qty').value=1;
+  }
+}
+function adjLocIn(idx,d){
+  const el=document.getElementById('ei-loc-qty-'+idx);
+  el.value=Math.max(0,parseInt(el.value||0)+d);
+  calcLocInTotal();
+}
+function calcLocInTotal(){
+  const it=items.find(x=>String(x.id)===String(selEI));
+  const locs=parseLocs(it?it.loc||'':'');
+  let total=0;
+  locs.forEach((_,i)=>{
+    const el=document.getElementById('ei-loc-qty-'+i);
+    if(el) total+=parseInt(el.value)||0;
+  });
+  document.getElementById('ei-loc-total').textContent=total+(it?getUnit(it):'');
+}
+
 function buildOutLocSection(it){
   const locs=parseLocs(it.loc||'');
   const locSec=document.getElementById('out-loc-section');
@@ -1491,12 +1551,30 @@ async function submitInExist(){
   const it=items.find(x=>String(x.id)===String(selEI));
   const errEl=document.getElementById('ei-err');errEl.style.display='none';
   if(!it){errEl.textContent='品番を選択してください';errEl.style.display='';return;}
-  const qty=parseInt(document.getElementById('ei-qty').value)||0;
-  if(qty<1){errEl.textContent='1以上入力してください';errEl.style.display='';return;}
+
+  const locSec=document.getElementById('ei-loc-section');
+  const useLocMode=locSec&&locSec.style.display!=='none';
+  let qty=0;
+  let newLocStr=null;
+
+  if(useLocMode){
+    const locs=parseLocs(it.loc||'');
+    const inQtys=locs.map((_,i)=>parseInt(document.getElementById('ei-loc-qty-'+i).value)||0);
+    qty=inQtys.reduce((a,b)=>a+b,0);
+    if(qty<1){errEl.textContent='1以上入力してください';errEl.style.display='';return;}
+    // 保管場所の数量を加算
+    const updated=locs.map((l,i)=>({...l,qty:(l.qty!=null?l.qty:0)+inQtys[i]}));
+    newLocStr=locsToString(updated);
+  } else {
+    qty=parseInt(document.getElementById('ei-qty').value)||0;
+    if(qty<1){errEl.textContent='1以上入力してください';errEl.style.display='';return;}
+  }
+
   const btn=document.getElementById('ei-submit-btn');btn.disabled=true;btn.textContent='処理中...';
   const clearOrder=getStatus(it)==='ordering'&&document.getElementById('ei-clear-order').checked;
   const payload={id:it.id,stock:Number(it.stock)+qty};
   if(clearOrder)payload.ordered=false;
+  if(newLocStr!==null)payload.loc=newLocStr;
   try{
     const res=await gasCall({action:'update',data:payload});
     if(res.ok){localStorage.removeItem(CACHE_KEY);await loadData(false);toast('✓ 入庫：'+it.code+' +'+qty+getUnit(it));goHome();}
